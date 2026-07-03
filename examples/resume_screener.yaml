@@ -1,0 +1,181 @@
+# Fictional demo system: an LLM-assisted resume screening tool.
+# Chosen because it is a textbook Annex III point 4(a) case (screening and
+# filtering of job applications) and involves profiling, which defeats any
+# Art 6(3) derogation - so the classification logic is fully exercised.
+
+name: "CandidateRank"
+version: "2.3.0"
+description: >
+  SaaS tool that parses incoming CVs with an LLM, scores candidates against
+  a job profile, and produces a ranked shortlist for recruiters.
+provider: "Fictional Talent Tech Ltd"
+intended_purpose: "Rank and filter job applications for human recruiters."
+intended_users: "In-house recruiters and HR service providers in the EU."
+use_restrictions: "Not for fully automated rejection without human review."
+is_llm_based: true
+deployment_context: "Multi-tenant SaaS, EU customers, deployed since 2025."
+
+classification:
+  use_case_tags: [recruitment_screening, candidate_evaluation]
+  performs_profiling: true          # scores individuals on work performance
+  # A derogation claim is present to show the engine rejecting it:
+  derogation_claims:
+    art6.3.d: "Only prepares a shortlist; a human makes the final decision."
+  placed_on_market_date: 2025-06-01
+  generates_synthetic_content: false
+  interacts_with_natural_persons: false
+
+models:
+  - name: "cr-ranker"
+    version: "2.3.0"
+    architecture_family: "gradient-boosted trees"
+    license: "proprietary"
+  - name: "Mistral-7B-Instruct-v0.3"
+    version: "0.3"
+    architecture_family: "transformer-decoder"
+    provider: "Mistral AI"
+    license: "Apache-2.0"
+    is_foundation_model: true
+    source_url: "https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3"
+
+datasets:
+  - name: "historic-hiring-outcomes"
+    role: "training"
+    source: "Customer ATS exports, 2019-2024"
+    provenance: "Hiring decisions collected under customer DPAs; original purpose: recruitment administration."
+    license: "customer-contract"
+    contains_personal_data: true
+    preparation: "De-duplication, PII pseudonymisation, outcome labelling by HR analysts."
+    known_gaps: "Under-representation of career-break candidates; pre-2021 data lacks structured skill fields."
+    bias_assessment: "Demographic parity gap measured across gender and age bands, Q1 2026."
+  - name: "cv-parsing-corpus"
+    role: "fine-tuning"
+    source: "Scraped public CV templates + synthetic CVs"
+    provenance: null            # <- deliberate gap: exercises Art 10(2)(b) auto-finding
+    license: null
+    contains_personal_data: false
+    preparation: "Synthetic augmentation; manual template curation."
+    known_gaps: null            # <- deliberate gap
+    bias_assessment: null       # <- deliberate gap
+
+dependencies:
+  - {name: "scikit-learn", version: "1.5.0", license: "BSD-3-Clause", purpose: "ranker training"}
+  - {name: "transformers", version: "4.46.0", license: "Apache-2.0", purpose: "LLM inference"}
+  - {name: "fastapi", version: "0.115.0", license: "MIT", purpose: "serving"}
+
+evaluations:
+  - {name: "shortlist precision@10", value: "0.81", dataset: "historic-hiring-outcomes"}
+  - {name: "demographic parity gap (gender)", value: "3.2pp", dataset: "historic-hiring-outcomes",
+     notes: "Above internal 2pp threshold - mitigation in progress."}
+
+known_limitations:
+  - "Parsing quality degrades on non-standard CV layouts."
+  - "Ranker not validated for non-EU labour markets."
+
+evidence:
+  # Article 9
+  rms_established:
+    answer: partial
+    note: "Risk register exists in Confluence; no documented process owner or review cadence."
+  rms_lifecycle_reviews:
+    answer: "no"
+    note: "Risks reviewed ad hoc after incidents only."
+  risk_identification:
+    answer: partial
+    note: "Fundamental-rights risks (discrimination) identified; health/safety not considered."
+  misuse_analysis:
+    answer: "no"
+    note: "No analysis of foreseeable misuse (e.g. auto-rejection without review)."
+  post_market_feedback_loop:
+    answer: partial
+    note: "Customer support tickets reviewed monthly; no structured feed into risk register."
+  risk_treatment_measures:
+    answer: partial
+    note: "Bias mitigation planned for ranker; no treatment plan for LLM parsing errors."
+  residual_risk_acceptance:
+    answer: "no"
+    note: "No documented residual-risk acceptance."
+  deployer_information:
+    answer: "yes"
+    note: "Customer-facing model guide documents limitations and required human review."
+  testing_defined_metrics:
+    answer: partial
+    note: "Accuracy metrics defined pre-release; no probabilistic thresholds, no adversarial testing of the LLM parser."
+  pre_market_testing:
+    answer: "yes"
+    note: "Release gate runs evaluation suite on held-out data."
+  vulnerable_groups_assessment:
+    answer: "no"
+    note: "No specific analysis (e.g. young first-time applicants)."
+
+  # Article 10 (questionnaire-side; auto.* keys come from the datasets block)
+  data_design_choices:
+    answer: "yes"
+    note: "Dataset design decisions recorded in ML design docs since v2.0."
+  data_assumptions:
+    answer: partial
+    note: "Assumption that past hiring outcomes proxy job performance is stated but never validated."
+  data_suitability_assessment:
+    answer: "yes"
+    note: "Data volume and coverage assessed per customer during onboarding."
+  bias_mitigation_measures:
+    answer: partial
+    note: "Reweighing applied for gender; age and disability not yet addressed."
+  representativeness_evidence:
+    answer: partial
+    note: "Representativeness checked for DE/FR markets only; deployed EU-wide."
+  deployment_setting_match:
+    answer: "no"
+    note: "No analysis of geographic/sectoral setting match per deployment."
+  special_category_data_controls:
+    answer: partial
+    note: "Special-category attributes pseudonymised for bias testing; deletion-after-use not enforced."
+
+  # Article 11 (auto.* keys for components/datasets/evals come from the record)
+  technical_documentation_maintained:
+    answer: partial
+    note: "ML design docs current in Confluence; no consolidated technical file following the Annex IV structure."
+
+  # Article 13
+  output_interpretability:
+    answer: partial
+    note: "Ranker shows feature importances per candidate; LLM parsing extractions are not surfaced for review."
+  instructions_for_use_completeness:
+    answer: partial
+    note: "Model guide covers intended use, restrictions and limitations; no accuracy levels, misuse risks or input-data specifications."
+  oversight_instructions:
+    answer: "yes"
+    note: "Customer guide mandates human review of every shortlist and describes the review UI."
+  logging_described:
+    answer: partial
+    note: "Per-tenant API logs retained 90 days; log schema and export mechanism not documented for customers."
+
+  # Article 14
+  oversight_measures_designed:
+    answer: partial
+    note: "Recruiter must click-approve a shortlist before export; no per-candidate review step for auto-filtered rejections."
+  overseer_competence_automation_bias:
+    answer: "no"
+    note: "No training or guidance for recruiters on automation bias or interpreting scores."
+  override_and_stop_controls:
+    answer: "yes"
+    note: "Recruiters can re-rank or reinstate any candidate; tenant-level kill switch disables scoring."
+  # biometric_two_person_verification intentionally unanswered - Art 14(5)
+  # is Not Applicable for this system (no remote biometric identification).
+
+  # Article 15
+  accuracy_levels_declared:
+    answer: "no"
+    note: "Precision metrics tracked internally; nothing declared in customer-facing instructions."
+  failsafe_redundancy:
+    answer: partial
+    note: "Service degrades to manual review queue on model outage; silent CV-parsing failures have no detection or fallback."
+  feedback_loop_controls:
+    answer: "no"
+    note: "Customer hiring outcomes flow into quarterly retraining without re-running bias checks on the feedback data."
+  adversarial_security_testing:
+    answer: "no"
+    note: "No adversarial testing of the LLM parser (e.g. prompt injection embedded in CV text)."
+  security_controls_ai_specific:
+    answer: partial
+    note: "Standard appsec in place (SAST, annual pentest); no AI-specific poisoning/evasion/extraction controls."

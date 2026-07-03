@@ -1,0 +1,256 @@
+# EU AI Act Article 10 - Data and data governance
+# This is the article most directly fed by the AI-BOM: dataset provenance,
+# preparation and known-gaps fields in the SystemRecord are auto-derived
+# evidence here (evidence_keys prefixed "auto." are resolved from the record,
+# not the questionnaire).
+
+article: "10"
+title: "Data and data governance"
+regime: high_risk_annex_iii
+summary: >
+  Training, validation and testing datasets of high-risk AI systems must be
+  subject to documented data governance practices covering design choices,
+  collection and origin, preparation, assumptions, suitability, bias
+  examination and mitigation, and identified gaps - and must be relevant,
+  sufficiently representative and appropriately complete for the intended
+  purpose.
+
+obligations:
+  - id: "art10.2a"
+    clause: "Art 10(2)(a)"
+    severity: medium
+    text: >
+      Data governance covers the relevant design choices for training,
+      validation and testing datasets.
+    evidence_keys: [data_design_choices]
+    mappings:
+      iso42001:
+        - ref: "A.7.2"
+          rationale: >
+            A.7.2 (data for development and enhancement) requires defining and
+            documenting how data is selected for AI development - the design
+            choices Art 10(2)(a) wants recorded.
+      nist_ai_rmf:
+        - ref: "MAP 2.3"
+          rationale: >
+            MAP 2.3 requires documenting TEVV and scientific-integrity
+            considerations including experimental design and data collection
+            and selection - the RMF home of dataset design choices.
+      owasp_llm: []
+
+  - id: "art10.2b"
+    clause: "Art 10(2)(b)"
+    severity: high
+    text: >
+      Data governance covers data collection processes and the origin of the
+      data, and in the case of personal data, its original purpose.
+    evidence_keys: [auto.dataset_provenance]
+    mappings:
+      iso42001:
+        - ref: "A.7.3"
+          rationale: >
+            A.7.3 (acquisition of data) requires documenting how and from
+            where data is acquired - the collection-process half of 10(2)(b).
+        - ref: "A.7.5"
+          rationale: >
+            A.7.5 (data provenance) requires recording the origin and history
+            of data - the origin half of 10(2)(b), and the exact field the
+            AI-BOM exports for each dataset.
+      nist_ai_rmf:
+        - ref: "MAP 2.3"
+          rationale: >
+            MAP 2.3's documentation of data collection and selection is where
+            provenance evidence lands in the RMF.
+      owasp_llm:
+        - ref: "LLM03"
+          when: llm_based
+          rationale: >
+            Supply Chain (LLM03): undocumented third-party dataset origin is
+            simultaneously an Art 10(2)(b) gap and an LLM03 supply-chain
+            exposure - one missing provenance record, two findings.
+        - ref: "LLM04"
+          when: llm_based
+          rationale: >
+            Data and Model Poisoning (LLM04): provenance tracking is the
+            primary preventive control against poisoned training or
+            fine-tuning data.
+
+  - id: "art10.2c"
+    clause: "Art 10(2)(c)"
+    severity: medium
+    text: >
+      Data governance covers relevant data-preparation processing operations,
+      such as annotation, labelling, cleaning, updating, enrichment and
+      aggregation.
+    evidence_keys: [auto.dataset_preparation]
+    mappings:
+      iso42001:
+        - ref: "A.7.6"
+          rationale: >
+            A.7.6 (data preparation) requires defining and documenting
+            preparation methods - a one-to-one match with 10(2)(c)'s list of
+            preparation operations.
+      nist_ai_rmf:
+        - ref: "MAP 2.3"
+          rationale: >
+            Dataset preparation choices are part of the experimental-design
+            documentation MAP 2.3 requires.
+      owasp_llm: []
+
+  - id: "art10.2d"
+    clause: "Art 10(2)(d)"
+    severity: medium
+    text: >
+      Data governance covers the formulation of assumptions, notably with
+      respect to the information the data are supposed to measure and
+      represent.
+    evidence_keys: [data_assumptions]
+    mappings:
+      iso42001:
+        - ref: "A.7.4"
+          rationale: >
+            A.7.4 (quality of data) requires defining quality requirements
+            for the data's fitness to represent what the system needs -
+            assumptions about what data measures are quality criteria.
+      nist_ai_rmf:
+        - ref: "MAP 2.3"
+          rationale: >
+            MAP 2.3 explicitly covers construct validation - whether the data
+            measures the concept it is assumed to measure - which is
+            10(2)(d)'s "measure and represent" requirement in RMF language.
+      owasp_llm: []
+
+  - id: "art10.2e"
+    clause: "Art 10(2)(e)"
+    severity: medium
+    text: >
+      Data governance covers an assessment of the availability, quantity and
+      suitability of the datasets that are needed.
+    evidence_keys: [data_suitability_assessment]
+    mappings:
+      iso42001:
+        - ref: "A.4.3"
+          rationale: >
+            A.4.3 (data resources) requires documenting data resources needed
+            for the AI system - availability and quantity planning.
+        - ref: "A.7.4"
+          rationale: >
+            Suitability assessment is a data-quality determination under
+            A.7.4.
+      nist_ai_rmf:
+        - ref: "MAP 2.3"
+          rationale: >
+            MAP 2.3 names availability, representativeness and suitability of
+            data as documentation items verbatim.
+      owasp_llm: []
+
+  - id: "art10.2fg"
+    clause: "Art 10(2)(f)-(g)"
+    severity: high
+    text: >
+      Examine datasets for possible biases likely to affect health and safety,
+      negatively impact fundamental rights or lead to prohibited
+      discrimination, and take appropriate measures to detect, prevent and
+      mitigate those biases.
+    evidence_keys: [auto.dataset_bias_assessment, bias_mitigation_measures]
+    mappings:
+      iso42001:
+        - ref: "A.7.4"
+          rationale: >
+            Bias examination is a data-quality requirement under A.7.4; ISO
+            42001 treats bias as a dimension of data quality.
+        - ref: "A.5.4"
+          rationale: >
+            A.5.4 (impacts on individuals and groups) is where detected bias
+            is assessed for its fundamental-rights consequences.
+      nist_ai_rmf:
+        - ref: "MEASURE 2.11"
+          rationale: >
+            MEASURE 2.11 requires fairness and bias to be evaluated with
+            results documented - the direct RMF counterpart of 10(2)(f)-(g).
+      owasp_llm:
+        - ref: "LLM04"
+          when: llm_based
+          rationale: >
+            LLM04 covers deliberate and accidental poisoning that introduces
+            bias into training/fine-tuning/embedding data; bias examination
+            under 10(2)(f) is a detective control for it.
+
+  - id: "art10.2h"
+    clause: "Art 10(2)(h)"
+    severity: medium
+    text: >
+      Identify relevant data gaps or shortcomings that prevent compliance,
+      and how they can be addressed.
+    evidence_keys: [auto.dataset_known_gaps]
+    mappings:
+      iso42001:
+        - ref: "A.7.4"
+          rationale: >
+            Documented shortcomings against defined data-quality requirements
+            are A.7.4's non-conformity record.
+      nist_ai_rmf:
+        - ref: "MAP 2.2"
+          rationale: >
+            MAP 2.2 requires documenting knowledge limits of the system;
+            known data gaps are the primary source of those limits.
+      owasp_llm: []
+
+  - id: "art10.3-4"
+    clause: "Art 10(3)-(4)"
+    severity: high
+    text: >
+      Datasets shall be relevant, sufficiently representative, and to the best
+      extent possible free of errors and complete in view of the intended
+      purpose; and shall take into account the characteristics of the specific
+      geographical, contextual, behavioural or functional setting of use.
+    evidence_keys: [representativeness_evidence, deployment_setting_match]
+    mappings:
+      iso42001:
+        - ref: "A.7.4"
+          rationale: >
+            Representativeness, error rates and completeness are the core
+            measurable criteria a data-quality process under A.7.4 must set.
+      nist_ai_rmf:
+        - ref: "MAP 2.3"
+          rationale: >
+            Representativeness is named in MAP 2.3's data collection and
+            selection documentation.
+        - ref: "MEASURE 2.3"
+          rationale: >
+            MEASURE 2.3 requires performance measurement under conditions
+            similar to deployment - the operational test of whether Art
+            10(4)'s setting-match actually holds.
+      owasp_llm: []
+
+  - id: "art10.5"
+    clause: "Art 10(5)"
+    severity: medium
+    text: >
+      Special categories of personal data may be processed for bias detection
+      and correction only under strict conditions (necessity, safeguards,
+      pseudonymisation, deletion after use, documented reasons).
+    evidence_keys: [special_category_data_controls]
+    applicability:
+      requires_any:
+        - datasets_contain_personal_data
+    mappings:
+      iso42001:
+        - ref: "A.7.3"
+          rationale: >
+            Conditions attached to acquiring and processing sensitive data are
+            acquisition controls under A.7.3, alongside the organisation's
+            privacy obligations.
+      nist_ai_rmf:
+        - ref: "MEASURE 2.10"
+          rationale: >
+            MEASURE 2.10 requires privacy risk to be evaluated and documented;
+            Art 10(5)'s safeguards are the EU-specific implementation of that
+            evaluation for sensitive attributes used in bias work.
+      owasp_llm:
+        - ref: "LLM02"
+          when: llm_based
+          rationale: >
+            Sensitive Information Disclosure (LLM02): special-category data
+            retained in training corpora is the classic source of LLM02
+            leakage; Art 10(5)'s deletion/pseudonymisation duties reduce it.

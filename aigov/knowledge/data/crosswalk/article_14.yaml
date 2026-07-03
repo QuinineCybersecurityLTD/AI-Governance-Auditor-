@@ -1,0 +1,126 @@
+# EU AI Act Article 14 - Human oversight
+
+article: "14"
+title: "Human oversight"
+regime: high_risk_annex_iii
+summary: >
+  The system must be designed for effective human oversight: interface tools
+  that enable oversight, measures built in or handed to the deployer,
+  overseers who understand the system and resist automation bias, and the
+  ability to disregard output or halt the system. Remote biometric
+  identification adds a two-person verification rule.
+
+obligations:
+  - id: "art14.1-3"
+    clause: "Art 14(1)-(3)"
+    severity: high
+    text: >
+      Design the system, including appropriate human-machine interface tools,
+      so it can be effectively overseen by natural persons; oversight
+      measures are built into the system where feasible and/or identified
+      for the deployer to implement.
+    evidence_keys: [oversight_measures_designed]
+    mappings:
+      iso42001:
+        - ref: "A.9.2"
+          rationale: >
+            A.9.2 (processes for responsible use) is where an AIMS defines
+            the human checkpoints in system operation; Art 14(1)-(3) demands
+            those checkpoints be designed into the product, not just policy.
+      nist_ai_rmf:
+        - ref: "MAP 3.5"
+          rationale: >
+            MAP 3.5 requires processes for human oversight to be defined,
+            assessed and documented - the RMF's direct counterpart to the
+            Art 14 oversight design duty.
+      owasp_llm:
+        - ref: "LLM06"
+          when: llm_based
+          rationale: >
+            Excessive Agency (LLM06) mitigation is human-in-the-loop approval
+            for high-impact actions - for LLM systems, oversight design and
+            agency limitation are the same engineering decision.
+
+  - id: "art14.4a-c"
+    clause: "Art 14(4)(a)-(c)"
+    severity: medium
+    text: >
+      Persons assigned to oversight must be enabled to understand the
+      system's capacities and limitations, monitor its operation, remain
+      aware of automation bias, and correctly interpret its output.
+    evidence_keys: [overseer_competence_automation_bias]
+    mappings:
+      iso42001:
+        - ref: "A.4.6"
+          rationale: >
+            A.4.6 (human resources) requires ensuring the competences needed
+            for the AI system's lifecycle roles - overseer capability is a
+            competence requirement, met by training and role definition.
+        - ref: "A.8.2"
+          rationale: >
+            Overseers can only "understand capacities and limitations" if
+            A.8.2's user-facing documentation actually reaches and equips
+            them.
+      nist_ai_rmf:
+        - ref: "GOVERN 3.2"
+          rationale: >
+            GOVERN 3.2's defined human-AI oversight roles include the
+            proficiency those roles require; automation-bias awareness is
+            named in the AI RMF's discussion of human-AI configuration.
+      owasp_llm: []
+
+  - id: "art14.4d-e"
+    clause: "Art 14(4)(d)-(e)"
+    severity: high
+    text: >
+      Overseers must be able to decide not to use the system, disregard or
+      override its output, and intervene in its operation or interrupt it
+      through a stop control so it halts in a safe state.
+    evidence_keys: [override_and_stop_controls]
+    mappings:
+      iso42001:
+        - ref: "A.9.2"
+          rationale: >
+            Override and refusal paths are operational use processes; A.9.2
+            is where an AIMS requires them to exist and be exercised.
+      nist_ai_rmf:
+        - ref: "MANAGE 2.4"
+          rationale: >
+            MANAGE 2.4 requires mechanisms and assigned responsibilities to
+            supersede, disengage or deactivate systems behaving
+            inconsistently with intended use - the Art 14(4)(e) stop control,
+            verbatim in RMF language.
+      owasp_llm:
+        - ref: "LLM06"
+          when: llm_based
+          rationale: >
+            The ability to interrupt an LLM-driven workflow before its
+            actions take effect is the operational backstop LLM06 assumes;
+            no stop control means unbounded agency.
+
+  - id: "art14.5"
+    clause: "Art 14(5)"
+    severity: high
+    text: >
+      For remote biometric identification systems (Annex III point 1(a)), no
+      action or decision is taken on the basis of the identification unless
+      separately verified and confirmed by at least two natural persons with
+      the necessary competence, training and authority.
+    evidence_keys: [biometric_two_person_verification]
+    applicability:
+      requires_any:
+        - use_case_remote_biometric_id
+    mappings:
+      iso42001:
+        - ref: "A.9.2"
+          rationale: >
+            The two-person verification rule is a use-process control; in an
+            AIMS it is implemented as a documented A.9.2 operating procedure
+            for the biometric use case.
+      nist_ai_rmf:
+        - ref: "GOVERN 3.2"
+          rationale: >
+            A two-person rule is a human-AI configuration decision: GOVERN
+            3.2's role definitions are where the verifying persons'
+            competence and authority requirements are set.
+      owasp_llm: []

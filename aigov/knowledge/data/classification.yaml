@@ -1,0 +1,57 @@
+# Article 6 classification rules, post-Digital-Omnibus.
+# The classifier is a deterministic decision tree over these rules so every
+# classification step can be cited in the report.
+
+annex_iii_categories:
+  # id -> use_case_tags that trigger it (record.classification.use_case_tags)
+  - id: "annexIII.1"
+    label: "Biometrics (remote biometric identification, biometric categorisation, emotion recognition)"
+    tags: [biometric_identification, biometric_categorisation, emotion_recognition]
+  - id: "annexIII.2"
+    label: "Critical infrastructure safety components (digital infra, road traffic, water/gas/heating/electricity)"
+    tags: [critical_infrastructure_safety]
+  - id: "annexIII.3"
+    label: "Education and vocational training (admission, evaluation, level assessment, exam proctoring)"
+    tags: [education_admission, education_assessment, exam_proctoring]
+  - id: "annexIII.4"
+    label: "Employment, workers management and access to self-employment"
+    tags: [recruitment_advertising, recruitment_screening, candidate_evaluation,
+           promotion_termination, task_allocation, worker_monitoring]
+  - id: "annexIII.5"
+    label: "Essential private and public services (public assistance, creditworthiness, life/health insurance pricing, emergency dispatch)"
+    tags: [public_assistance_eligibility, creditworthiness, insurance_pricing_life_health,
+           emergency_dispatch]
+  - id: "annexIII.6"
+    label: "Law enforcement"
+    tags: [law_enforcement]
+  - id: "annexIII.7"
+    label: "Migration, asylum and border control"
+    tags: [migration_asylum_border]
+  - id: "annexIII.8"
+    label: "Administration of justice and democratic processes"
+    tags: [justice_administration, democratic_processes]
+
+art6_3_derogations:
+  # An Annex III system is NOT high-risk if it poses no significant risk,
+  # including by not materially influencing decision outcomes, and one of
+  # these applies. Profiling of natural persons defeats ALL derogations
+  # (Art 6(3) final subparagraph).
+  - id: "art6.3.a"
+    label: "Performs only a narrow procedural task"
+  - id: "art6.3.b"
+    label: "Improves the result of a previously completed human activity"
+  - id: "art6.3.c"
+    label: "Detects decision-making patterns or deviations without replacing or influencing prior human assessment without proper review"
+  - id: "art6.3.d"
+    label: "Performs a preparatory task to an assessment relevant to Annex III use cases"
+
+annex_i_rule:
+  # Post-Omnibus narrowing: a safety component in an Annex I product is only
+  # high-risk if its failure could endanger health or safety. Systems doing
+  # user assistance, performance optimisation, efficiency or quality control
+  # no longer qualify absent that danger.
+  note: >
+    Art 6(1) as amended by the Digital Omnibus: requires (a) the system is a
+    product / safety component of a product covered by Annex I Union
+    harmonisation legislation subject to third-party conformity assessment,
+    AND (b) its failure could endanger health or safety.

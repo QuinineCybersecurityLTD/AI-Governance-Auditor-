@@ -1,0 +1,32 @@
+# Knowledge-base metadata. Every report cites knowledge_version so an
+# assessment is always traceable to the regulatory state it was made under.
+knowledge_version: "2026.07.0"
+compiled_date: 2026-07-03
+frameworks:
+  eu_ai_act:
+    instrument: "Regulation (EU) 2024/1689, as amended by the Digital Omnibus on AI"
+    omnibus_status: >
+      Political agreement 7 May 2026; European Parliament endorsement 16 June
+      2026; Council final approval 29 June 2026. NOT yet published in the
+      Official Journal as of 2026-07-03 (publication expected July 2026,
+      in force 3 days after). This knowledge base treats the Omnibus dates
+      as authoritative and flags this pending status in every report.
+  iso42001:
+    instrument: "ISO/IEC 42001:2023, Annex A (38 controls, objectives A.2-A.10)"
+  nist_ai_rmf:
+    instrument: "NIST AI RMF 1.0 (AI 100-1, Jan 2023); GenAI Profile AI 600-1 (Jul 2024)"
+    note: >
+      NIST's published EU AI Act crosswalk (Jan 2023) maps only trustworthiness
+      characteristics to the *proposed* Act. Article-to-subcategory links in
+      this knowledge base are our own derivation, anchored on that table and
+      on the subcategory text of AI 100-1. An AI RMF revision is in progress
+      (expected through 2026); mappings are version-stamped for that reason.
+  owasp_llm:
+    instrument: "OWASP Top 10 for LLM Applications, 2025 edition (LLM01-LLM10)"
+sources:
+  - "https://www.globalpolicywatch.com/2026/06/eu-ai-act-update-timeline-relief-targeted-simplification-and-new-prohibitions-2/ (retrieved 2026-07-03)"
+  - "https://www.gibsondunn.com/eu-ai-act-omnibus-agreement-postponed-high-risk-deadlines-and-other-key-changes/ (retrieved 2026-07-03)"
+  - "https://artificialintelligenceact.eu/article/50/ (retrieved 2026-07-03)"
+  - "https://airc.nist.gov/airmf-resources/crosswalks/ (retrieved 2026-07-03)"
+  - "https://genai.owasp.org/llm-top-10/ (retrieved 2026-07-03)"
+  - "https://www.isms.online/iso-42001/annex-a-controls/ (retrieved 2026-07-03)"

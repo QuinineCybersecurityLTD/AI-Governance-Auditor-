@@ -1,0 +1,147 @@
+# EU AI Act Article 15 - Accuracy, robustness and cybersecurity
+# The OWASP-densest article: Art 15(5) names data poisoning, model poisoning,
+# adversarial examples/model evasion and confidentiality attacks explicitly.
+
+article: "15"
+title: "Accuracy, robustness and cybersecurity"
+regime: high_risk_annex_iii
+summary: >
+  Achieve appropriate and consistent levels of accuracy, robustness and
+  cybersecurity throughout the lifecycle; declare accuracy levels and
+  metrics in the instructions for use; be resilient to errors and faults
+  (redundancy, fail-safe); control feedback-loop bias in continuously
+  learning systems; and resist AI-specific attacks including poisoning,
+  evasion and confidentiality attacks.
+
+obligations:
+  - id: "art15.1-3a"
+    clause: "Art 15(1), 15(3) first subpara"
+    severity: high
+    text: >
+      Design for an appropriate level of accuracy that performs consistently
+      throughout the lifecycle, and declare the accuracy levels and relevant
+      accuracy metrics in the accompanying instructions for use.
+    evidence_keys: [auto.evaluation_results, accuracy_levels_declared]
+    mappings:
+      iso42001:
+        - ref: "A.6.2.4"
+          rationale: >
+            A.6.2.4 (verification and validation) is where accuracy is
+            actually measured against defined criteria; without V&V records
+            there are no accuracy levels to declare.
+        - ref: "A.8.2"
+          rationale: >
+            Declaring measured accuracy to deployers is user-facing
+            information under A.8.2 - the declaration half of Art 15(3).
+      nist_ai_rmf:
+        - ref: "MEASURE 2.5"
+          rationale: >
+            MEASURE 2.5 requires the system to be demonstrated as valid and
+            reliable, with limitations documented - the RMF's accuracy and
+            consistency requirement.
+      owasp_llm: []
+
+  - id: "art15.3b-4"
+    clause: "Art 15(3) second subpara, 15(4) first subpara"
+    severity: medium
+    text: >
+      Be as resilient as possible regarding errors, faults and
+      inconsistencies, including through technical redundancy solutions,
+      backup and fail-safe plans.
+    evidence_keys: [failsafe_redundancy]
+    mappings:
+      iso42001:
+        - ref: "A.6.2.6"
+          rationale: >
+            A.6.2.6 (operation and monitoring) covers keeping the system
+            performing within defined bounds in operation - failure modes,
+            degradation paths and recovery are its operational content.
+      nist_ai_rmf:
+        - ref: "MEASURE 2.6"
+          rationale: >
+            MEASURE 2.6 requires regular evaluation of safety risks and
+            demonstrated fail-safe behaviour consistent with risk tolerance -
+            the RMF home of redundancy and fail-safe evidence.
+      owasp_llm: []
+
+  - id: "art15.4-feedback"
+    clause: "Art 15(4) third subpara"
+    severity: medium
+    text: >
+      For systems that continue to learn after deployment, eliminate or
+      reduce as far as possible the risk of possibly biased outputs
+      influencing input for future operations (feedback loops), with
+      appropriate mitigation measures.
+    evidence_keys: [feedback_loop_controls]
+    mappings:
+      iso42001:
+        - ref: "A.7.4"
+          rationale: >
+            Feedback data entering retraining is new training data; A.7.4's
+            data-quality requirements (including bias) must be re-applied to
+            it, which is exactly the control Art 15(4) demands.
+      nist_ai_rmf:
+        - ref: "MEASURE 2.11"
+          rationale: >
+            MEASURE 2.11's fairness and bias evaluation is not one-shot; for
+            continuously learning systems it must run on the feedback loop,
+            or amplification goes undetected.
+      owasp_llm:
+        - ref: "LLM04"
+          when: llm_based
+          rationale: >
+            Data and Model Poisoning (LLM04): a production feedback loop is
+            an open poisoning channel - users can deliberately steer future
+            behaviour; Art 15(4) mitigation and LLM04 mitigation coincide.
+
+  - id: "art15.5"
+    clause: "Art 15(5)"
+    severity: high
+    text: >
+      Be resilient against attempts by unauthorised third parties to alter
+      use, outputs or performance by exploiting system vulnerabilities;
+      technical solutions shall include, where appropriate, measures to
+      prevent, detect, respond to and control attacks including data
+      poisoning, model poisoning, adversarial examples/model evasion, and
+      confidentiality attacks.
+    evidence_keys: [adversarial_security_testing, security_controls_ai_specific]
+    mappings:
+      iso42001:
+        - ref: "A.6.2.6"
+          rationale: >
+            Detection of and response to attacks in operation sits in A.6.2.6
+            monitoring. Note: ISO 42001 deliberately leans on an ISO 27001
+            ISMS for security controls - an AIMS alone does not satisfy Art
+            15(5); the crosswalk records this as a known seam between the
+            standards.
+      nist_ai_rmf:
+        - ref: "MEASURE 2.7"
+          rationale: >
+            MEASURE 2.7 requires security and resilience to be evaluated and
+            documented - the direct RMF counterpart of Art 15(5), and its
+            discussion covers the same AI-specific attack classes.
+      owasp_llm:
+        - ref: "LLM01"
+          when: llm_based
+          rationale: >
+            Prompt Injection (LLM01) is model evasion for LLM systems: it
+            alters outputs by exploiting how the model processes input,
+            squarely inside Art 15(5)'s attack list.
+        - ref: "LLM02"
+          when: llm_based
+          rationale: >
+            Sensitive Information Disclosure (LLM02) is the LLM realisation
+            of Art 15(5)'s "confidentiality attacks" - extraction of
+            training data or system context from the model.
+        - ref: "LLM04"
+          when: llm_based
+          rationale: >
+            Art 15(5) names data poisoning and model poisoning verbatim;
+            LLM04 is the same attack class with LLM-specific vectors
+            (fine-tuning data, embeddings, RAG corpora).
+        - ref: "LLM10"
+          when: llm_based
+          rationale: >
+            Unbounded Consumption (LLM10): resource-exhaustion attacks alter
+            the system's performance and availability for other users -
+            within Art 15(5)'s "alter performance" scope.

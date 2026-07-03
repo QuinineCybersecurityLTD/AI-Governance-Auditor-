@@ -1,0 +1,132 @@
+# EU AI Act Article 11 - Technical documentation (with Annex IV)
+# Heavily BOM-fed: model components, dependencies, evaluations and known
+# limitations are auto-derived from the SystemRecord - the same fields the
+# AI-BOM exports become Annex IV evidence.
+
+article: "11"
+title: "Technical documentation"
+regime: high_risk_annex_iii
+summary: >
+  Technical documentation drawn up before placing on the market and kept up
+  to date, containing at least the Annex IV elements: general description,
+  development process, architecture and third-party components, data
+  requirements and datasheets, validation and testing results, performance
+  metrics and known limitations.
+
+obligations:
+  - id: "art11.1"
+    clause: "Art 11(1)"
+    severity: high
+    text: >
+      Draw up technical documentation before placing on the market or putting
+      into service, keep it up to date, and structure it to demonstrate
+      compliance with the Section 2 requirements (Annex IV elements).
+    evidence_keys: [technical_documentation_maintained]
+    mappings:
+      iso42001:
+        - ref: "A.6.2.7"
+          rationale: >
+            A.6.2.7 (AI system technical documentation) requires exactly this
+            artefact: documentation sufficient for interested parties -
+            including regulators - to understand and assess the system.
+      nist_ai_rmf:
+        - ref: "GOVERN 1.6"
+          rationale: >
+            GOVERN 1.6 requires an inventory of AI systems with associated
+            documentation; a maintained Annex IV technical file is the
+            per-system documentation record that inventory presumes.
+      owasp_llm: []
+
+  - id: "art11.annexIV.2bc"
+    clause: "Art 11(1) + Annex IV 2(b)-(c)"
+    severity: medium
+    text: >
+      Document the development process, design specifications and system
+      architecture, including where third-party tools or pre-trained
+      models/components are used and how they were integrated.
+    evidence_keys: [auto.model_components_documented, auto.dependency_inventory]
+    mappings:
+      iso42001:
+        - ref: "A.6.2.3"
+          rationale: >
+            A.6.2.3 (documentation of AI system design and development)
+            requires recording design choices and development steps - Annex
+            IV 2(b)-(c) is the regulator-facing version of that record.
+        - ref: "A.10.3"
+          rationale: >
+            A.10.3 (suppliers) requires ensuring third-party components meet
+            the organisation's requirements; documenting pre-trained
+            components and their versions is the evidence trail for it.
+      nist_ai_rmf:
+        - ref: "MAP 2.1"
+          rationale: >
+            MAP 2.1 requires documenting the specific tasks, methods and
+            technologies the system employs - the architecture half of
+            Annex IV 2(b)-(c).
+      owasp_llm:
+        - ref: "LLM03"
+          when: llm_based
+          rationale: >
+            Supply Chain (LLM03): an undocumented pre-trained model or
+            dependency is an unmanaged supply-chain component; the Annex IV
+            component record and the AI-BOM are the same control seen from
+            legal and security sides.
+
+  - id: "art11.annexIV.2d"
+    clause: "Art 11(1) + Annex IV 2(d)"
+    severity: high
+    text: >
+      Provide datasheets describing the training methodologies and the
+      training/validation/testing datasets used, including their provenance,
+      scope, characteristics, collection and preparation.
+    evidence_keys: [auto.dataset_provenance, auto.dataset_preparation]
+    mappings:
+      iso42001:
+        - ref: "A.7.5"
+          rationale: >
+            A.7.5 (data provenance) supplies the recorded origin and history
+            of data that an Annex IV datasheet must contain; without the
+            provenance record there is nothing to put in the datasheet.
+      nist_ai_rmf:
+        - ref: "MAP 2.3"
+          rationale: >
+            MAP 2.3's documentation of data collection and selection is the
+            RMF artefact an Annex IV 2(d) datasheet is compiled from.
+      owasp_llm:
+        - ref: "LLM03"
+          when: llm_based
+          rationale: >
+            Dataset datasheets are AI-supply-chain transparency: LLM03
+            mitigation guidance calls for tracking dataset origins exactly as
+            Annex IV 2(d) requires for the technical file.
+    note: >
+      Deliberately reuses the same auto-evidence as Art 10(2)(b)-(c): one
+      missing provenance field in the SystemRecord produces both a
+      data-governance finding (Art 10) and a technical-documentation finding
+      (Art 11) - and an incomplete AI-BOM entry.
+
+  - id: "art11.annexIV.2g-3"
+    clause: "Art 11(1) + Annex IV 2(g), 3"
+    severity: medium
+    text: >
+      Document validation and testing procedures and results, the metrics
+      used to measure accuracy, robustness and compliance, and the system's
+      capabilities and limitations in performance.
+    evidence_keys: [auto.evaluation_results, auto.known_limitations]
+    mappings:
+      iso42001:
+        - ref: "A.6.2.4"
+          rationale: >
+            A.6.2.4 (verification and validation) produces the V&V records
+            that Annex IV 2(g) requires the technical file to contain.
+      nist_ai_rmf:
+        - ref: "MEASURE 2.1"
+          rationale: >
+            MEASURE 2.1 requires test sets, metrics and TEVV tooling to be
+            documented - the source material for Annex IV's metrics section.
+        - ref: "MAP 2.2"
+          rationale: >
+            MAP 2.2 requires documenting the system's knowledge limits;
+            Annex IV 3's "capabilities and limitations" section is that
+            documentation addressed to the regulator.
+      owasp_llm: []
