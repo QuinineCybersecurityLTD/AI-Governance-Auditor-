@@ -26,6 +26,29 @@ jobs:
           python -m aigov.cli bom examples/resume_screener.yaml --out out
           python -m aigov.cli crosswalk --out out
 
+  independent-bom-validation:
+    # cross-implementation conformance: the CycloneDX JS library and a generic
+    # SHACL engine validate what the Python pipeline generated
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Generate BOMs
+        run: |
+          pip install -e . pyshacl
+          python -m aigov.cli bom examples/resume_screener.yaml --out out
+      - name: CycloneDX - official JS implementation
+        run: |
+          cd tools && npm ci
+          node validate_cdx_independent.mjs ../out/bom.cdx.json
+      - name: SPDX - official SHACL model via pyshacl
+        run: python tools/validate_spdx_shacl.py out/bom.spdx3.json
+
   docker:
     runs-on: ubuntu-latest
     steps:

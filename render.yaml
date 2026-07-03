@@ -1,0 +1,14 @@
+# Render.com blueprint - alternative to Fly.io. Connect the repo in the
+# Render dashboard and it picks this up; set AIGOV_API_KEYS in the dashboard
+# (marked sync:false so it is never committed).
+services:
+  - type: web
+    name: aigov-api
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: AIGOV_API_KEYS
+        sync: false
+      - key: AIGOV_RATE_LIMIT
+        value: "60"

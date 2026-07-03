@@ -94,6 +94,34 @@ def bom(
 
 
 @app.command()
+def ingest(
+    model_card: Path,
+    out: Path = typer.Option(Path("system_record.yaml"), help="Output record path"),
+    name: Optional[str] = typer.Option(None, help="System name (default: model name)"),
+):
+    """Pre-fill a partial SystemRecord from a HuggingFace-style model card.
+
+    Fills what a card can reliably state (model, license, base model, dataset
+    ids, eval metrics); everything else is left for human completion and
+    will surface as gaps - by design."""
+    import yaml as _yaml
+
+    from aigov.bom import manual_input_gaps
+    from aigov.ingest import record_from_model_card
+
+    record = record_from_model_card(model_card, system_name=name)
+    out.write_text(
+        _yaml.safe_dump(record.model_dump(mode="json"), sort_keys=False, allow_unicode=True),
+        encoding="utf-8",
+    )
+    gaps = manual_input_gaps(record)
+    typer.echo(f"Wrote {out} (partial record: {len(record.models)} model(s), "
+               f"{len(record.datasets)} dataset(s), {len(record.evaluations)} evaluation(s))")
+    typer.echo(f"{len(gaps)} field(s) still require manual input - run "
+               f"'aigov bom {out}' to see them, or complete the record in the UI.")
+
+
+@app.command()
 def crosswalk(out: Path = typer.Option(Path("out"), help="Output directory")):
     """Export the full crosswalk matrix (CSV + JSON)."""
     kb = knowledge.load()
