@@ -1,0 +1,43 @@
+# Regulatory timeline as data. Obligations reference a regime id; the
+# engine compares the regime's applies_from with the assessment date to
+# distinguish "gap now" from "upcoming gap (from <date>)".
+#
+# Dates reflect the Digital Omnibus on AI as finally approved by Council on
+# 2026-06-29 (OJ publication pending as of 2026-07-03).
+regimes:
+  prohibited_practices:
+    label: "Art 5 prohibited practices"
+    applies_from: 2025-02-02
+    original_date: 2025-02-02
+    source: "Reg (EU) 2024/1689 Art 113(a); unchanged by Omnibus"
+
+  gpai_obligations:
+    label: "GPAI model obligations (Ch V)"
+    applies_from: 2025-08-02
+    original_date: 2025-08-02
+    source: "Reg (EU) 2024/1689 Art 113(b); unchanged by Omnibus"
+
+  transparency_art50_general:
+    label: "Art 50 transparency (disclosure of AI interaction, deepfake labelling)"
+    applies_from: 2026-08-02
+    original_date: 2026-08-02
+    source: "Reg (EU) 2024/1689 Art 113; general Art 50 duties unaffected by Omnibus"
+
+  transparency_art50_marking_existing:
+    label: "Art 50(2) machine-readable marking - systems already on market before 2026-08-02"
+    applies_from: 2026-12-02
+    original_date: 2026-08-02
+    source: "Digital Omnibus: 4-month grace for systems placed on market before 2026-08-02; new systems must comply on placement"
+    condition: "placed_on_market_before_2026_08_02"
+
+  high_risk_annex_iii:
+    label: "High-risk obligations - standalone Annex III systems (Arts 8-15 etc.)"
+    applies_from: 2027-12-02
+    original_date: 2026-08-02
+    source: "Digital Omnibus: deferred from 2026-08-02 to 2027-12-02"
+
+  high_risk_annex_i:
+    label: "High-risk obligations - Annex I product-embedded systems"
+    applies_from: 2028-08-02
+    original_date: 2027-08-02
+    source: "Digital Omnibus: deferred from 2027-08-02 to 2028-08-02"

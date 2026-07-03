@@ -1,0 +1,119 @@
+# EU AI Act Article 13 - Transparency and provision of information to deployers
+
+article: "13"
+title: "Transparency and provision of information to deployers"
+regime: high_risk_annex_iii
+summary: >
+  The system must be designed so deployers can interpret its output and use
+  it appropriately, and must ship with instructions for use covering
+  capabilities and limitations, accuracy levels, foreseeable misuse risks,
+  human oversight measures, and logging.
+
+obligations:
+  - id: "art13.1"
+    clause: "Art 13(1)"
+    severity: high
+    text: >
+      Design and develop the system so its operation is sufficiently
+      transparent to enable deployers to interpret the output and use it
+      appropriately.
+    evidence_keys: [output_interpretability]
+    mappings:
+      iso42001:
+        - ref: "A.8.2"
+          rationale: >
+            A.8.2 (system documentation and information for users) is the ISO
+            control that makes system behaviour interpretable to those who
+            deploy it - the "for deployers" transparency of Art 13(1).
+      nist_ai_rmf:
+        - ref: "MEASURE 2.9"
+          rationale: >
+            MEASURE 2.9 requires the AI model to be explained, validated and
+            documented - interpretability of output is the deployer-facing
+            outcome of that evaluation.
+        - ref: "MEASURE 2.8"
+          rationale: >
+            MEASURE 2.8 covers transparency and accountability evaluation;
+            Art 13(1) is transparency assessed from the deployer's seat.
+      owasp_llm: []
+
+  - id: "art13.3b"
+    clause: "Art 13(3)(b)"
+    severity: high
+    text: >
+      Instructions for use must state the system's characteristics,
+      capabilities and limitations of performance, including intended
+      purpose, accuracy levels and metrics, foreseeable misuse risks,
+      and input data specifications.
+    evidence_keys: [instructions_for_use_completeness, auto.known_limitations]
+    mappings:
+      iso42001:
+        - ref: "A.8.2"
+          rationale: >
+            The instructions-for-use content list of Art 13(3)(b) is the
+            statutory version of A.8.2's required user information.
+        - ref: "A.9.4"
+          rationale: >
+            A.9.4 (intended use of the AI system) requires the intended use
+            to be defined and communicated - the first item on Art
+            13(3)(b)'s list.
+      nist_ai_rmf:
+        - ref: "MAP 2.2"
+          rationale: >
+            MAP 2.2 requires knowledge limits to be documented AND
+            communicated to relevant parties - limitations disclosure to
+            deployers is that communication.
+      owasp_llm:
+        - ref: "LLM09"
+          when: llm_based
+          rationale: >
+            Misinformation (LLM09) materialises through overreliance on
+            unqualified output; communicated accuracy levels and limitations
+            are the primary deployer-side mitigation OWASP recommends.
+
+  - id: "art13.3d"
+    clause: "Art 13(3)(d)"
+    severity: medium
+    text: >
+      Instructions for use must describe the human oversight measures per
+      Article 14, including the technical measures facilitating
+      interpretation of output by deployers.
+    evidence_keys: [oversight_instructions]
+    mappings:
+      iso42001:
+        - ref: "A.9.2"
+          rationale: >
+            A.9.2 (processes for responsible use) covers defining how humans
+            are meant to work with the system in operation; Art 13(3)(d)
+            requires shipping that definition to the deployer.
+      nist_ai_rmf:
+        - ref: "GOVERN 3.2"
+          rationale: >
+            GOVERN 3.2 requires policies defining roles and responsibilities
+            for human-AI configurations and oversight; the deployer can only
+            staff those roles if the instructions describe the oversight
+            measures.
+      owasp_llm: []
+
+  - id: "art13.3ef"
+    clause: "Art 13(3)(e)-(f)"
+    severity: medium
+    text: >
+      Instructions for use must state computational and hardware resources
+      needed, expected lifetime and maintenance measures, and describe the
+      mechanisms allowing deployers to collect, store and interpret logs.
+    evidence_keys: [logging_described]
+    mappings:
+      iso42001:
+        - ref: "A.6.2.8"
+          rationale: >
+            A.6.2.8 (event logs) requires the system to record events; Art
+            13(3)(f) additionally requires telling deployers how to collect
+            and interpret those logs.
+      nist_ai_rmf:
+        - ref: "MEASURE 2.8"
+          rationale: >
+            Log accessibility is an accountability mechanism; MEASURE 2.8's
+            transparency and accountability evaluation covers whether
+            operational records are available to those accountable.
+      owasp_llm: []
