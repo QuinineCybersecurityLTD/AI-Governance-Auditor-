@@ -13,13 +13,14 @@ dependencies = [
     "typer>=0.12",
     "jinja2>=3.1",
     "markdown>=3.5",
-    "spdx-python-model>=0.1",
+    "spdx-python-model>=0.0.6",
     "cyclonedx-python-lib>=11.4",
     "jsonschema>=4.21",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+api = ["fastapi>=0.110", "uvicorn>=0.29"]
+dev = ["pytest>=8.0", "fastapi>=0.110", "httpx>=0.27"]
 
 [project.scripts]
 aigov = "aigov.cli:app"

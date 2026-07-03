@@ -42,6 +42,38 @@ aigov crosswalk --out out                     # export matrix (CSV/JSON)
 Outputs: `out/audit_report.md`, `out/audit_report.html`, `out/bom.spdx3.json`,
 `out/bom.cdx.json`, `out/bom_gaps.md`, `out/crosswalk.csv`, `out/crosswalk.json`.
 
+## Run as a service (SaaS delivery)
+
+The same engine ships as a stateless FastAPI service — the `SystemRecord`
+Pydantic model is simultaneously the YAML schema for the CLI and the JSON
+request body for the API, so the two can't drift apart.
+
+```bash
+pip install -e ".[api]"
+uvicorn aigov.api:app --port 8000
+# interactive docs at http://localhost:8000/docs
+```
+
+| Endpoint | What it does |
+|---|---|
+| `GET /health` | service + knowledge-base version, articles covered |
+| `POST /v1/classify` | Article 6 classification with reasoning |
+| `POST /v1/audit` | full audit; `?include_report=true` adds the Markdown report |
+| `POST /v1/bom` | both BOMs, schema-validated per request (invalid ⇒ HTTP 500, never silently shipped) |
+| `GET /v1/crosswalk` | the full crosswalk with rationales |
+| `GET /v1/timeline` | post-Omnibus regulatory timeline as data |
+
+Or containerised:
+
+```bash
+docker build -t aigov .
+docker run -p 8000:8000 aigov
+```
+
+No system data is persisted by the service — records go in, findings/BOMs
+come out. That is a deliberate posture for a compliance tool handling
+descriptions of client AI systems.
+
 ## How the BOM is validated (not asserted)
 
 - **CycloneDX 1.7**: `cyclonedx-python-lib`'s `JsonStrictValidator` with the
