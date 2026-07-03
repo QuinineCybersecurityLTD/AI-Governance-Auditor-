@@ -74,6 +74,37 @@ No system data is persisted by the service — records go in, findings/BOMs
 come out. That is a deliberate posture for a compliance tool handling
 descriptions of client AI systems.
 
+### Authentication & rate limiting
+
+Configured by environment (12-factor):
+
+```bash
+export AIGOV_API_KEYS="sk-client-a,sk-client-b"   # unset => open dev mode (warned)
+export AIGOV_RATE_LIMIT=60                        # requests/min per key (0 = off)
+docker run -p 8000:8000 -e AIGOV_API_KEYS -e AIGOV_RATE_LIMIT aigov
+```
+
+With keys set, every `/v1/*` call requires `X-API-Key` (constant-time
+comparison; 401 missing, 403 invalid, 429 over limit with `Retry-After`).
+`/health` stays open for load balancers. The rate limiter is in-process —
+correct for one container; horizontal scale-out needs a gateway or shared
+store in front, which is a deliberate boundary, not an oversight.
+
+## Web front end (questionnaire UI)
+
+```bash
+pip install -e ".[ui]"
+streamlit run aigov/ui.py
+```
+
+A five-tab Streamlit app over the same engine: system record editor
+(identity, Article 6 inputs, models/datasets/dependencies tables),
+a **compliance questionnaire generated from the crosswalk knowledge base**
+(every question cites the obligation it evidences — new articles in the YAML
+appear in the form automatically), audit results with per-status metrics and
+report downloads, BOM generation with live schema-validation status, and a
+crosswalk explorer. Render-tested via streamlit's AppTest harness.
+
 ## How the BOM is validated (not asserted)
 
 - **CycloneDX 1.7**: `cyclonedx-python-lib`'s `JsonStrictValidator` with the

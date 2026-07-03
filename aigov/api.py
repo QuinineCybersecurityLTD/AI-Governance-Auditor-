@@ -10,10 +10,11 @@ from __future__ import annotations
 import datetime as dt
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query
 from pydantic import BaseModel
 
 from aigov import __version__, knowledge
+from aigov.auth import require_api_key
 from aigov.assess import AuditResult, audit as run_audit
 from aigov.bom import build_cdx, build_spdx, manual_input_gaps, validate_cdx, validate_spdx
 from aigov.bom.gaps import BomGap
@@ -31,6 +32,10 @@ app = FastAPI(
         "one SystemRecord in, evidence-backed findings and validated BOMs out."
     ),
 )
+
+# /health is open (load balancers need it); everything under /v1 requires an
+# API key when AIGOV_API_KEYS is set, and is rate-limited per key.
+v1 = APIRouter(prefix="/v1", dependencies=[Depends(require_api_key)])
 
 
 class HealthResponse(BaseModel):
@@ -64,13 +69,13 @@ def health() -> HealthResponse:
     )
 
 
-@app.post("/v1/classify", response_model=ClassificationResult)
+@v1.post("/classify", response_model=ClassificationResult)
 def classify(record: SystemRecord) -> ClassificationResult:
     """Article 6 classification only - fast pre-check."""
     return run_classify(record, knowledge.load())
 
 
-@app.post("/v1/audit", response_model=AuditResponse)
+@v1.post("/audit", response_model=AuditResponse)
 def audit(
     record: SystemRecord,
     assessment_date: Optional[dt.date] = Query(default=None),
@@ -85,7 +90,7 @@ def audit(
     )
 
 
-@app.post("/v1/bom", response_model=BomResponse)
+@v1.post("/bom", response_model=BomResponse)
 def bom(record: SystemRecord) -> BomResponse:
     """Generate both BOM formats; validation runs on every request and the
     errors are returned rather than hidden - an invalid BOM is a 500, not a
@@ -108,7 +113,7 @@ def bom(record: SystemRecord) -> BomResponse:
     )
 
 
-@app.get("/v1/crosswalk")
+@v1.get("/crosswalk")
 def crosswalk() -> dict:
     """The full crosswalk matrix with rationales - the knowledge base as API."""
     kb = knowledge.load()
@@ -118,7 +123,7 @@ def crosswalk() -> dict:
     }
 
 
-@app.get("/v1/timeline")
+@v1.get("/timeline")
 def timeline() -> dict:
     """Regulatory timeline (post-Digital-Omnibus) as data."""
     kb = knowledge.load()
@@ -127,3 +132,6 @@ def timeline() -> dict:
         "omnibus_status": kb.meta["frameworks"]["eu_ai_act"]["omnibus_status"].strip(),
         "regimes": {k: v.model_dump(mode="json") for k, v in kb.regimes.items()},
     }
+
+
+app.include_router(v1)
