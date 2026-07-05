@@ -1,8 +1,8 @@
-# aigov — AI Governance Auditor & AI-BOM Generator
+# aigov AI Governance Auditor & AI-BOM Generator
 
 Audits an AI system against **EU AI Act Arts 6, 9–15**, **ISO/IEC 42001 Annex A**,
 **NIST AI RMF 1.0**, and **OWASP LLM Top 10 (2025)** through one unified
-crosswalk — and (Part 2, in progress) exports the same system record as an
+crosswalk and (Part 2, in progress) exports the same system record as an
 **SPDX 3.0 AI Profile** and **CycloneDX 1.7 ML-BOM**.
 
 ## Status
@@ -16,13 +16,13 @@ manual-input-required gaps reported instead of invented values.
 
 ## Design in one paragraph
 
-One **SystemRecord** (YAML) describes the AI system — identity, Article 6
+One **SystemRecord** (YAML) describes the AI system identity, Article 6
 facts, models, datasets, dependencies, evaluations, questionnaire evidence.
 The **knowledge base** (`aigov/knowledge/data/`) is versioned YAML: the
 EU-article→ISO/NIST/OWASP crosswalk with a written rationale on every link,
 plus the regulatory timeline (post-Digital-Omnibus dates) as data. The engine
 classifies first (Art 6 gates everything), then assesses each obligation from
-evidence — questionnaire answers, or fields derived automatically from the
+evidence questionnaire answers, or fields derived automatically from the
 BOM-facing dataset metadata (`auto.*` evidence keys). Verdicts are
 Compliant / Partial / Gap / Not Applicable, each with a rationale citing the
 clause, and each flagged **in force now vs. applies from a future date**.
@@ -44,7 +44,7 @@ Outputs: `out/audit_report.md`, `out/audit_report.html`, `out/bom.spdx3.json`,
 
 ## Run as a service (SaaS delivery)
 
-The same engine ships as a stateless FastAPI service — the `SystemRecord`
+The same engine ships as a stateless FastAPI service the `SystemRecord`
 Pydantic model is simultaneously the YAML schema for the CLI and the JSON
 request body for the API, so the two can't drift apart.
 
@@ -70,7 +70,7 @@ docker build -t aigov .
 docker run -p 8000:8000 aigov
 ```
 
-No system data is persisted by the service — records go in, findings/BOMs
+No system data is persisted by the service records go in, findings/BOMs
 come out. That is a deliberate posture for a compliance tool handling
 descriptions of client AI systems.
 
@@ -100,7 +100,7 @@ streamlit run aigov/ui.py
 A five-tab Streamlit app over the same engine: system record editor
 (identity, Article 6 inputs, models/datasets/dependencies tables),
 a **compliance questionnaire generated from the crosswalk knowledge base**
-(every question cites the obligation it evidences — new articles in the YAML
+(every question cites the obligation it evidences new articles in the YAML
 appear in the form automatically), audit results with per-status metrics and
 report downloads, BOM generation with live schema-validation status, and a
 crosswalk explorer. Render-tested via streamlit's AppTest harness.
@@ -109,7 +109,7 @@ crosswalk explorer. Render-tested via streamlit's AppTest harness.
 
 - **CycloneDX 1.7**: `cyclonedx-python-lib`'s `JsonStrictValidator` with the
   bundled official schema. The library has no modelCard classes yet, so the
-  document is built as a dict against the 1.7 schema — the strict validator
+  document is built as a dict against the 1.7 schema the strict validator
   is what makes that safe.
 - **SPDX 3.0.1**: built with the official generated bindings
   (`spdx-python-model`, which type-check on assignment), then validated two
@@ -128,7 +128,7 @@ pending as of 2026-07-03) deferred Annex III high-risk obligations to
 **2 Dec 2027** and Annex I to **2 Aug 2028**; Art 50 general transparency still
 applies from **2 Aug 2026**, with a marking grace period to **2 Dec 2026** for
 systems already on the market. All of this lives in
-`aigov/knowledge/data/timeline.yaml` — a date change is a data edit plus a
+`aigov/knowledge/data/timeline.yaml` a date change is a data edit plus a
 `knowledge_version` bump, and every report cites the version it was assessed
 under.
 
@@ -143,7 +143,7 @@ derivation.
 
 ```
 aigov/
-├── record.py              # SystemRecord — the one shared record (audit + BOM)
+├── record.py              # SystemRecord the one shared record (audit + BOM)
 ├── classify.py            # Art 6 decision tree (post-Omnibus rules)
 ├── assess.py              # evidence -> verdict + rationale + timeline flag
 ├── report.py              # Markdown/HTML report, crosswalk CSV/JSON
